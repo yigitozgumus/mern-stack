@@ -3,18 +3,18 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class EditExercise extends Component {
+export default class EditTask extends Component {
   constructor(props) {
     super(props);
 
-    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.onChangeProjectname = this.onChangeProjectname.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
     this.onChangeDuration = this.onChangeDuration.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
-      username: '',
+      projectname: '',
       description: '',
       duration: 0,
       date: new Date(),
@@ -23,24 +23,24 @@ export default class EditExercise extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/exercises/'+this.props.match.params.id)
+    axios.get('http://localhost:5000/tasks/'+this.props.match.params.id)
       .then(response => {
         this.setState({
-          username: response.data.username,
+          projectname: response.data.projectname,
           description: response.data.description,
           duration: response.data.duration,
-          date: new Date(response.data.date)
+          duedate: new Date(response.data.duedate)
         })   
       })
       .catch(function (error) {
         console.log(error);
       })
 
-    axios.get('http://localhost:5000/users/')
+    axios.get('http://localhost:5000/projects/')
       .then(response => {
         if (response.data.length > 0) {
           this.setState({
-            users: response.data.map(user => user.username),
+            users: response.data.map(user => user.projectname),
           })
         }
       })
@@ -50,9 +50,9 @@ export default class EditExercise extends Component {
 
   }
 
-  onChangeUsername(e) {
+  onChangeProjectname(e) {
     this.setState({
-      username: e.target.value
+      projectname: e.target.value
     })
   }
 
@@ -68,25 +68,25 @@ export default class EditExercise extends Component {
     })
   }
 
-  onChangeDate(date) {
+  onChangeDate(duedate) {
     this.setState({
-      date: date
+      duedate: duedate
     })
   }
 
   onSubmit(e) {
     e.preventDefault();
 
-    const exercise = {
-      username: this.state.username,
+    const task = {
+      projectname: this.state.projectname,
       description: this.state.description,
       duration: this.state.duration,
-      date: this.state.date
+      duedate: this.state.duedate
     }
 
-    console.log(exercise);
+    console.log(task);
 
-    axios.post('http://localhost:5000/exercises/update/' + this.props.match.params.id, exercise)
+    axios.post('http://localhost:5000/exercises/update/' + this.props.match.params.id, task)
       .then(res => console.log(res.data));
 
     window.location = '/';
@@ -95,20 +95,20 @@ export default class EditExercise extends Component {
   render() {
     return (
     <div>
-      <h3>Edit Exercise Log</h3>
+      <h3>Edit a Task</h3>
       <form onSubmit={this.onSubmit}>
         <div className="form-group"> 
-          <label>Username: </label>
+          <label>Projectname: </label>
           <select ref="userInput"
               required
               className="form-control"
-              value={this.state.username}
-              onChange={this.onChangeUsername}>
+              value={this.state.projectname}
+              onChange={this.onChangeProjectname}>
               {
-                this.state.users.map(function(user) {
+                this.state.projects.map(function(project) {
                   return <option 
-                    key={user}
-                    value={user}>{user}
+                    key={project}
+                    value={project}>{project}
                     </option>;
                 })
               }
@@ -133,17 +133,17 @@ export default class EditExercise extends Component {
               />
         </div>
         <div className="form-group">
-          <label>Date: </label>
+          <label>Due Date: </label>
           <div>
             <DatePicker
-              selected={this.state.date}
+              selected={this.state.duedate}
               onChange={this.onChangeDate}
             />
           </div>
         </div>
 
         <div className="form-group">
-          <input type="submit" value="Edit Exercise Log" className="btn btn-primary" />
+          <input type="submit" value="Edit Task Log" className="btn btn-primary" />
         </div>
       </form>
     </div>
