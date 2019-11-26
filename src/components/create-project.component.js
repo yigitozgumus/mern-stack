@@ -22,13 +22,13 @@ export default class CreateProject extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const user = {
+    const project = {
       projectname: this.state.projectname
     };
 
-    console.log(user);
+    console.log(project);
     
-    axios.post('http://localhost:5000/projects/add', user)
+    axios.post('http://localhost:5000/projects/add', project)
     .then(res => console.log(res.data));
 
     this.setState({

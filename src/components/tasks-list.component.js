@@ -61,7 +61,7 @@ export default class TasksList extends Component {
         <table className="table">
           <thead className="thead-light">
             <tr>
-              <th>Projectname</th>
+              <th>Project name</th>
               <th>Description</th>
               {/* <th>Duration</th> */}
               <th>Due Date</th>
