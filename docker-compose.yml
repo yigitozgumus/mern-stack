@@ -1,0 +1,42 @@
+version: "3.4"
+
+services:
+  client:
+    image: client
+    volumes:
+      - ./client:/usr/src/app
+    environment:
+      NODE_ENV: production
+    ports:
+      - 5000:5000
+    networks:
+      - mern-app
+  server:
+    image: server
+    volumes:
+      - ./server:/usr/src/app
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
+    networks:
+      - mern-app
+    depends_on:
+      - mongo
+  mongo:
+    restart: always
+    image: mongo:3.6.20-xenial
+    ports:
+      - 27017:27017
+    networks:
+      - mern-app
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  mern-app:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
